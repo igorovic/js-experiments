@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <script type="module" src="/main.js"></script> -->
+    <script>
+      let storeModule;
+      import("/main.js").then((M) => {
+        console.debug("dynamic import ", M);
+        storeModule = M;
+      });
+      const clickHandler = (ev) => {
+        console.log("click handler", ev);
+        storeModule.store.dispatch(new storeModule.InitEvent(ev));
+        storeModule.store.dispatch(new storeModule.BubblyEvent(ev));
+      };
+    </script>
+  </head>
+  <body>
+    <div id="container">
+      <div style="display: flex; flex-direction: column">
+        <button id="btn1">Click me</button>
+        <span>This button will dispatch event directly on the store.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; margin: 2rem 0">
+        <button id="btn2">dispatch in dom</button>
+        <span>This button will dispatch a store event in the DOM.</span>
+      </div>
+    </div>
+    <script>
+      //@ts-check
+      document.querySelector("#btn1").addEventListener("click", clickHandler);
+      document.querySelector("#btn2").addEventListener("click", (e) => {
+        console.debug("click event", e);
+        e.target.dispatchEvent(new storeModule.BubblyEvent());
+      });
+      document.querySelector("#container").addEventListener("INIT", () => {
+        console.log("!!! container catched event INI");
+      });
+
+      document.querySelector("#container").addEventListener("BUBBLY", () => {
+        console.log("!!! container catched event BUBBLY");
+      });
+      document.addEventListener("INI", () =>
+        console.log("! document catched event INIT")
+      );
+      document.addEventListener("BUBBLY", () =>
+        console.log("! document catched event BUBBLY")
+      );
+    </script>
+  </body>
+</html>
