@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    height: 100vmax;
+}
+
+#dropzone{
+    background-color: cadetblue;
+    width: 200px;
+    height: 200px;
+}
+#dropzone::before{
+    content:"Drop zone"
+}
